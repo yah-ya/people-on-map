@@ -24,7 +24,30 @@
     </head>
     <body class="antialiased">
         <div id="app">
-            <map-component api-route="{{ route('map') }}"></map-component>
+            <div class="py-12 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center">
+                        <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase p-3">Yahaal Maps</h2>
+                        <p class=" text-3xl leading-8 font-extrabold tracking-tight text-gray-900 text-4xl">
+                            A better way to show the map
+                        </p>
+                        <p class=" max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                            Lorem ipsum dolor sit amet consect adipisicing elit. Possimus magnam voluptatum cupiditate veritatis in accusamus quisquam.
+                        </p>
+                    </div>
+                    <div class="mt-10">
+                        <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+                            <div class="relative">
+                                <dt>
+                                    <div class="absolute flex items-center justify-center rounded-md bg-indigo-500 text-white">
+                                        <map-component api-route="{{ route('map') }}"></map-component>
+                                    </div>
+                                </dt>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </body>

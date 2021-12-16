@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 use App\Models\People;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 
@@ -26,7 +27,6 @@ class FileDBHelper{
         $this->columns = rtrim($array[0]);
 
         //remove the columns from the array
-
         array_shift($array);
         $this->lines = $array;
 
@@ -41,29 +41,34 @@ class FileDBHelper{
     public function initRows():void
     {
 
+        $this->ppl = collect();
         foreach($this->lines as $line){
             if(empty($line))
                 continue;
+            //fetch the attrs from each line
             $attrs = explode(',',$line);
-            $ppl = new People;
-            $ppl->id = $attrs[0];
-            $ppl->first_name = $attrs[1];
-            $ppl->last_name = $attrs[2];
-            $ppl->gender = $attrs[3];
-            $ppl->lat = $attrs[4];
-            $ppl->lon = $attrs[5];
+
+            $ppl = People::makeFromAttrs($attrs);
             $this->ppl->add($ppl);
         }
 
     }
-//    private function setColumns():void
-//    {
-//        $this->columns = rtrim(strtok($this->content, PHP_EOL));
-//    }
 
-    public function filterGender($gender):Collection
+    public function filterGender($gender)
     {
-        return $this->ppl->where('gender',$gender);
+        return $this->ppl= $this->ppl->where('gender',$gender)->values();
+    }
+
+    public function filterCoordinates($cityLatLong):Collection {
+        $cityLatLon = explode(',',$cityLatLong);
+        $filteredValues = $this->filterDbItemsByCoordinates($cityLatLon);
+        return $this->ppl = $filteredValues;
+    }
+
+    public function filterNameOrFamily($txt){
+        return $this->ppl = $this->ppl->filter(function($item) use($txt){
+            return strpos($item->first_name,$txt) === 0 || strpos($item->last_name,$txt) === 0;
+        })->values();
     }
 
     public function all():array
@@ -75,5 +80,18 @@ class FileDBHelper{
     {
         return $this->ppl[$line];
     }
+
+
+    private function filterDbItemsByCoordinates($cityLatLon): Collection
+    {
+        $filteredValues = collect();
+        foreach($this->ppl->all() as $ppl){
+            if(DistanceHelper::getDistanceFromLatLonInKm($ppl->lat,$ppl->lon,$cityLatLon[0],$cityLatLon[1])<2000){
+                $filteredValues->add($ppl);
+            }
+        }
+        return $filteredValues;
+    }
+
 }
 ?>

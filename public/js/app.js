@@ -5280,6 +5280,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var markers = [];
+
+function pinSymbol(color) {
+  return {
+    path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+    fillColor: color,
+    fillOpacity: 0.9,
+    strokeColor: '#3d3d3d',
+    strokeWeight: 1,
+    scale: 1
+  };
+}
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'map-component',
@@ -5289,37 +5329,53 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       city: '51.5072,0.1276',
       msg: 'Welcome to Your Vue.js App',
       ppl: [],
-      filters: []
+      gender: '',
+      txt: '',
+      numberOfRecords: 0
     };
   },
   methods: {
-    updateCity: function updateCity(val) {
+    updateMap: function updateMap(val) {
       var latLon = this.city.split(',');
       this.map.setCenter(new window.google.maps.LatLng(latLon[0], latLon[1]));
       this.updatePoints();
     },
     updatePoints: function () {
       var _updatePoints = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var response, map;
+        var i, params, response, map;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get(this.apiRoute);
+                for (i = 0; i < markers.length; i++) {
+                  markers[i].setMap(null);
+                }
 
-              case 2:
+                markers = [];
+                params = {
+                  filter: {
+                    city: this.city,
+                    gender: this.gender,
+                    txt: this.txt
+                  }
+                };
+                _context.next = 5;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post(this.apiRoute, params);
+
+              case 5:
                 response = _context.sent;
                 map = this.map;
                 response.data.data.map(function (item) {
-                  new window.google.maps.Marker({
+                  markers.push(new window.google.maps.Marker({
                     position: new window.google.maps.LatLng(item.lat, item.lon),
                     map: map,
-                    title: "Hello World!"
-                  });
+                    title: item.first_name + ' ' + item.last_name,
+                    icon: pinSymbol(item.gender == 'Female' ? "#c93d81" : "#0656bd")
+                  }));
                 });
+                this.numberOfRecords = markers.length;
 
-              case 5:
+              case 9:
               case "end":
                 return _context.stop();
             }
@@ -5341,8 +5397,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         lng: 0.1276
       },
       scrollwheel: false,
-      zoom: 13
+      zoom: 5
     });
+    this.updateMap();
   }
 });
 
@@ -28719,63 +28776,186 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", [
-      _c(
-        "select",
-        {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.city,
-              expression: "city",
-            },
-          ],
-          attrs: { id: "city" },
-          on: {
-            change: [
-              function ($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function (o) {
-                    return o.selected
-                  })
-                  .map(function (o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.city = $event.target.multiple
-                  ? $$selectedVal
-                  : $$selectedVal[0]
-              },
-              _vm.updateCity,
-            ],
-          },
-        },
-        [
-          _c("option", { attrs: { value: "51.5072,0.1276" } }, [
-            _vm._v("London"),
+  return _c("div", { staticClass: "w-100" }, [
+    _c("div", { staticClass: "mt-5 md:mt-0 md:col-span-2" }, [
+      _c("form", { attrs: { action: "#", method: "POST" } }, [
+        _c("div", { staticClass: "shadow overflow-hidden sm:rounded-md" }, [
+          _c("div", { staticClass: "px-4 py-5 bg-white sm:p-6" }, [
+            _c("span", { staticClass: " text-gray-900" }, [
+              _vm._v(_vm._s(_vm.numberOfRecords)),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "grid grid-cols-6 gap-6" }, [
+              _c("div", { staticClass: "col-span-6 sm:col-span-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "block text-sm font-medium text-gray-700",
+                    attrs: { for: "first-name" },
+                  },
+                  [_vm._v("First name / Last Name : ")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.txt,
+                      expression: "txt",
+                    },
+                  ],
+                  staticClass:
+                    "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md",
+                  attrs: {
+                    name: "first-name",
+                    id: "first-name",
+                    autocomplete: "given-name",
+                  },
+                  domProps: { value: _vm.txt },
+                  on: {
+                    keyup: _vm.updateMap,
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.txt = $event.target.value
+                    },
+                  },
+                }),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-span-6 sm:col-span-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "block text-sm font-medium text-gray-700",
+                    attrs: { for: "city" },
+                  },
+                  [_vm._v("City")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.city,
+                        expression: "city",
+                      },
+                    ],
+                    staticClass:
+                      "mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                    attrs: { id: "city" },
+                    on: {
+                      change: [
+                        function ($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function (o) {
+                              return o.selected
+                            })
+                            .map(function (o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.city = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        _vm.updateMap,
+                      ],
+                    },
+                  },
+                  [
+                    _c("option", { attrs: { value: "" } }, [
+                      _vm._v("All Cities"),
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "51.5072,0.1276" } }, [
+                      _vm._v("London"),
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "48.8566,2.3522" } }, [
+                      _vm._v("Paris"),
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "39.0119,-94.578331" } }, [
+                      _vm._v("Kansas"),
+                    ]),
+                  ]
+                ),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-span-6 sm:col-span-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "block text-sm font-medium text-gray-700",
+                    attrs: { for: "gender" },
+                  },
+                  [_vm._v("Gender")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.gender,
+                        expression: "gender",
+                      },
+                    ],
+                    staticClass:
+                      "mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                    attrs: { id: "gender" },
+                    on: {
+                      change: [
+                        function ($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function (o) {
+                              return o.selected
+                            })
+                            .map(function (o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.gender = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        _vm.updateMap,
+                      ],
+                    },
+                  },
+                  [
+                    _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "Male" } }, [
+                      _vm._v("Male"),
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "Female" } }, [
+                      _vm._v("Female"),
+                    ]),
+                  ]
+                ),
+              ]),
+            ]),
+            _vm._v(" "),
+            _c("div", {
+              ref: "map",
+              staticClass: "w-100",
+              staticStyle: { height: "60vh" },
+              attrs: { id: "map" },
+            }),
           ]),
-          _vm._v(" "),
-          _c("option", { attrs: { value: "48.8566,2.3522" } }, [
-            _vm._v("Paris"),
-          ]),
-          _vm._v(" "),
-          _c("option", { attrs: { value: "39.0119,-94.578331" } }, [
-            _vm._v("Kansas"),
-          ]),
-        ]
-      ),
-      _vm._v(" "),
-      _c("span", [_vm._v("selected : " + _vm._s(_vm.city))]),
+        ]),
+      ]),
     ]),
-    _vm._v(" "),
-    _c("div", {
-      ref: "map",
-      staticClass: "w-100",
-      staticStyle: { height: "100vh" },
-      attrs: { id: "map" },
-    }),
   ])
 }
 var staticRenderFns = []
