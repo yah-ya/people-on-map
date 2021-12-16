@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Helpers\FileDBHelper;
+use App\Http\Controllers\PeopleController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -41,9 +42,6 @@ class ReadFileTest extends TestCase
         );
     }
 
-    public function test_filter_location(){
-
-    }
 
 
 

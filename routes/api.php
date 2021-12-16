@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('map',function(Request $req){
+   $db= new \App\Helpers\FileDBHelper();
+   $db->initRows();
+   return response()->json(['data'=>$db->all()]);
+})->name('map');

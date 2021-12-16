@@ -13,7 +13,7 @@ class FileDBHelper{
     public function __construct()
     {
         $this->file = storage_path('app\public\mock.txt');
-        $this->ppl = new Collection();
+        $this->ppl = collect();
         $this->readFile();
     }
 
@@ -26,8 +26,11 @@ class FileDBHelper{
         $this->columns = rtrim($array[0]);
 
         //remove the columns from the array
+
         array_shift($array);
         $this->lines = $array;
+
+
     }
 
     public function getColumns():string
@@ -39,15 +42,17 @@ class FileDBHelper{
     {
 
         foreach($this->lines as $line){
+            if(empty($line))
+                continue;
             $attrs = explode(',',$line);
             $ppl = new People;
-            $ppl->id = @$attrs[0];
-            $ppl->first_name = @$attrs[1];
-            $ppl->last_name = @$attrs[2];
-            $ppl->gender = @$attrs[3];
-            $ppl->lat = @$attrs[4];
-            $ppl->lon = @$attrs[5];
-            $this->ppl->put($ppl->id,$ppl);
+            $ppl->id = $attrs[0];
+            $ppl->first_name = $attrs[1];
+            $ppl->last_name = $attrs[2];
+            $ppl->gender = $attrs[3];
+            $ppl->lat = $attrs[4];
+            $ppl->lon = $attrs[5];
+            $this->ppl->add($ppl);
         }
 
     }
@@ -61,5 +66,14 @@ class FileDBHelper{
         return $this->ppl->where('gender',$gender);
     }
 
+    public function all():array
+    {
+        return $this->ppl->all();
+    }
+
+    public function getIndex($line):People
+    {
+        return $this->ppl[$line];
+    }
 }
 ?>
