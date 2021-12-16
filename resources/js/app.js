@@ -29,4 +29,11 @@ Vue.component('map-component', require('./components/MapComponent').default);
 
 const app = new Vue({
     el: '#app',
+    mounted:function(){
+        setTimeout(function(){
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+        },1000)
+
+    }
 });

@@ -5437,7 +5437,13 @@ Vue.component('map-component', (__webpack_require__(/*! ./components/MapComponen
  */
 
 var app = new Vue({
-  el: '#app'
+  el: '#app',
+  mounted: function mounted() {
+    setTimeout(function () {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+    }, 1000);
+  }
 });
 
 /***/ }),
