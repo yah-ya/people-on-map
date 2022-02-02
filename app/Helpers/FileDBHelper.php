@@ -13,7 +13,7 @@ class FileDBHelper{
     private $ppl = null;
     public function __construct()
     {
-        $this->file = storage_path('app\public\mock.txt');
+        $this->file = storage_path('app/public/mock.txt');
         $this->ppl = collect();
         $this->readFile();
     }

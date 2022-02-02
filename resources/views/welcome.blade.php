@@ -29,7 +29,7 @@
             <div class="py-12 bg-white">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center">
-                        <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase p-3">Yahaal Maps</h2>
+                        <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase p-3">On Demand Maps</h2>
                         <p class=" text-3xl leading-8 font-extrabold tracking-tight text-gray-900 text-4xl">
                             A better way to show the map
                         </p>
